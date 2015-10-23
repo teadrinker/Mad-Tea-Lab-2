@@ -1,0 +1,3 @@
+[submodule "client/lib/mdi.js"]
+	path = client/lib/mdi.js
+	url = https://github.com/teadrinker/mdi.js
