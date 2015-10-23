@@ -1,0 +1,45 @@
+<head>
+  <title>mtl</title>
+</head>
+
+<body>
+<div class="Top"></div>
+<div class="Main">{{ > main }}</div>
+</body>
+
+<template name="main">
+<div class="Left">
+  
+</div><div class="Right">
+  <div class="creater" data-create="Variable">create var;</div>
+  <div class="creater" data-create="Function">create fn;</div>
+  <div class="creater" data-create="Point">create points;</div>
+  {{#each variables}}
+  {{> variablePanel}}
+  {{/each}}
+  {{#each functions}}
+  {{> functionPanel}}
+  {{/each}}
+  <textarea id="code"></textarea>
+  {{stateDump}} 
+</div>
+</template>
+
+<template name="variablePanel">
+<div id="variable+{{id}}">
+<div> <input value="{{name}}">=<input value="{{value}}"> </div>
+<div class="slider">
+    <div class="sliderknob"></div>
+</div>
+<div class="animation"></div>
+<div class="integer"></div>
+</div>
+</template>
+
+<template name="functionPanel">
+<div id="function+{{id}}">
+<div> <input value="{{name}}">=<input value="{{value}}"> </div>
+<div class="animation"></div>
+<div class="integer"></div>
+</div>
+</template>
