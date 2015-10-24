@@ -1,3 +1,3 @@
-[submodule "client/lib/mdi.js"]
-	path = client/lib/mdi.js
-	url = https://github.com/teadrinker/mdi.js
+[submodule "public/mdi.js"]
+	path = public/mdi.js
+	url = git@github.com:teadrinker/mdi.js.git

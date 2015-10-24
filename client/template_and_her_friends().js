@@ -1,28 +1,32 @@
-"use strict"; 
-var scaling = function(){
-   
-};
+"use strict";
+_.helpers(MTL.helpers);
 
 Template.main.events({
-    'click .creater': function(e) { 
-      MTL["make"+$(e.currentTarget).data().create]();
+    "click .creater": function(e) {
+      MTL["make"+e.target.dataset.create]();
     }
 });
 
 Template.main.rendered = function() {
-    
-    var editor = CodeMirror.fromTextArea(this.find("#code"), {
-        lineNumbers: true,
-        mode: "javascript",
-        theme: "blackboard",
-    });
-    var keydownTimer = false;
-    editor.on("keydown",function(){
-            clearTimeout(keydownTimer);
-            keydownTimer = setTimeout(function(){
-                MTL.code = editor.getValue();
-            }, 300);    
-        });
+  MTL.GUI.makeEditor(this.find("#code"));
 }
 
-Template.main.helpers(MTL.helpers);
+Template.variablePanel.events({
+    "keyup [type=text]": _.timeOut(function(e){
+        if(e.target.value)
+          MTL.variables[this.id][e.target.dataset.key] = e.target.value;
+      }),
+    "click .checkbox": function(e){
+      MTL.variables[this.id][e.target.dataset.key] = !MTL.variables[this.id][e.target.dataset.key] ;
+    },
+});
+
+Template.variablePanel.rendered  = function(){
+    var variableId = this.data.id;
+    MTL.GUI.makeVariablePanel(variableId,{
+        slider: this.find('.slider'),
+        knob : this.find('.sliderKnob'),
+        textfields: this.findAll('[type=text]'),
+        checkboxes: this.findAll('.checkboxes')
+    });
+}

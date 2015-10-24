@@ -31,3 +31,23 @@ body,html{
  .Right{
     background-color: #fff;
  }
+
+.slider{
+    width: 140px;
+    .sliderKnob{
+        border-radius: 90px;
+        width: 20px;
+        height: 20px;
+        background-color: #111;
+        position: relative
+    }
+    .sliderVisual{
+
+    }
+}
+
+.checkbox{
+  width:20px;
+  height:20px;
+  background-color: #111;
+}
