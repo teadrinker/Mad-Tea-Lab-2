@@ -1,7 +1,8 @@
 "use strict";
 
-window.sliderWidth = 140;
-window.knobWidth = 20;
+var sliderWidth = 140;
+var knobWidth = 20;
+var MTL = window.MTL;
 
 window.MTL.GUI = {};
 
@@ -34,7 +35,7 @@ var valToKnobPosition = function(val,slider,variableId){
   if(val >= MTL.variables[variableId].max){
       return slider.upperBound;
   }
-  var knobPosition = (val/MTL.variables[variableId].range) * slider.range;
+  var knobPosition = (val-MTL.variables[variableId].min)/MTL.variables[variableId].range) * slider.range;
   return knobPosition;
 }
 var normalizeVal = function(val,variableId){
@@ -75,7 +76,7 @@ var slider = function(dom,variableId){
     }
   }});
 }
-slider.prototype.upperBound = window.sliderWidth-window.knobWidth;
+slider.prototype.upperBound = sliderWidth-knobWidth;
 slider.prototype.lowerBound = 0;
 slider.prototype.range = slider.prototype.upperBound - slider.prototype.lowerBound;
 //this should be designed reactively using defineProperty set & get (in the same way as how variables range is designed). But this implementation suffices for now.

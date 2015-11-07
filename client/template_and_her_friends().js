@@ -1,4 +1,5 @@
 "use strict";
+
 _.helpers(MTL.helpers);
 
 Template.main.events({
