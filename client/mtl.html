@@ -5,14 +5,13 @@
 
 <template name="main">
 <div class="Left">
-
+<div class="showCode">show code</div>
 </div><div class="Right">
   <div class="creater" data-create="Variable">create var;</div>
   <div class="creater" data-create="Function">create fn;</div>
   <div class="creater" data-create="Point">create points;</div>
-  {{#each variables}}
-  {{> Template.dynamic template="variablePanel" data=this}}
-  {{/each}}
+  <div class="hideCode">hide code</div>
+  <div class="variablePanel"></div>
   {{#each functions}}
   {{> functionPanel}}
   {{/each}}
@@ -31,11 +30,13 @@
 <input type="text" data-key="left"> <input type="text" data-key="right">
 <div class="checkbox" data-key="isInteger"></div>
 <div class="checkbox" data-key="isAnimating"></div>
+<div class="delete"></div>
 </div>
 </template>
 
 <template name="functionPanel">
 <div id="function{{id}}">
 <div> <input value="{{name}}">=<input value="{{value}}"> </div>
+<div class="delete"></div>
 </div>
 </template>

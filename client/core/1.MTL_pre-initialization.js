@@ -6,7 +6,7 @@ var letters = ["a","b","c","d", "h",  "l","m","n","o",  "q","r","s","t","u","v",
     numbers = [0,1,2,3,4,5,6,7,8,9];
 var allUsedObjectsNames = function(){
   return _.flatten(_.map(["functions","variables","points"],function(objs){
-    return _.map(MTL[objs],function(obj){return obj.name});
+    return _.map(MTL[objs],function(obj){console.log(obj); if(obj) return obj.name});
   }));
 };
 var firstAvailableVARName = function(){

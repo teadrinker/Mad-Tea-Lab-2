@@ -41,7 +41,11 @@ _.each(RealMTL.state, function(value, key){
     RealMTL.trackers[t] = _.newTracker();
     RealMTL.accessors[t] = function(){
       RealMTL.trackers[t].depend();
-      return RealMTL.state[t]; //return an array
+      return RealMTL.state[t];
+      //uncommented
+      //_.filter(RealMTL.state[t], function(e){ return e !== undefined })
+      //in case Tracker complains about "Bad index in range.addMember: 1"
+      //Tracker is not always very happy with Blaze.
     }
     RealMTL.oTrackers[t] = [];
     RealMTL.oAccessors[t] = [];
@@ -53,7 +57,7 @@ _.each(RealMTL.state, function(value, key){
       var newObj = _.new(RealMTL.ObjsPrototypes[t].obj, arguments);
       var objId = RealMTL.oIdCounters[t]++;
       newObj.id = objId;
-      RealMTL.state[t].push(newObj);
+      RealMTL.state[t][objId] = newObj;
       virtualMTL[t].push({});
       RealMTL.oMutators[t][objId] = {};
       RealMTL.oTrackers[t][objId] = {
@@ -94,8 +98,10 @@ _.each(RealMTL.state, function(value, key){
           RealMTL.oTrackers[t],
           RealMTL.oAccessors[t],
           RealMTL.oMutators[t],
-          RealMTL.oState[t]
-      ], function(a){delete a[objId]});
+          RealMTL.state[t],
+          virtualMTL[t]
+      ], function(a){delete a[id]});
+      //virtualMTL[t].splice(id, 1);
     };
     //virtual object constructor, destroyer for MTL:
     virtualMTL["make"+RealMTL.ObjsPrototypes[t].singular] =  function(){

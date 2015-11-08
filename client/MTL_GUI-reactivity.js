@@ -4,9 +4,6 @@ var sliderWidth = 140;
 var knobWidth = 20;
 var MTL = window.MTL;
 
-window.MTL.GUI = {};
-
-
 var makeReactiveValue = function(dom,objectType,objectId,key,transformation){
   Tracker.autorun(function(){
     var x = MTL[objectType][objectId][key];
@@ -113,10 +110,10 @@ var makeEditor = function(dom){
   return editor;
 }
 
-window.MTL.GUI.makeVariablePanel = function(){
+MTL.GUI.makeVariablePanel = function(){
   makeVariablePanel.apply(this,arguments);
 }
 
-window.MTL.GUI.makeEditor = function(){
+MTL.GUI.makeEditor = function(){
   makeEditor.apply(this,arguments);
 }
