@@ -22,10 +22,10 @@ _.mixin({
       _.each(MTLTrackers,function(t){
           t.depend();
       })
-  }),
+  },
   newTracker: function(){
       var t = new Tracker.Dependency;
       MTLTrackers.push(t);
       return t;
-  });
+  }
 });

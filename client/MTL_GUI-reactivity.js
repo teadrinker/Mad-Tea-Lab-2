@@ -16,6 +16,7 @@ var makeReactiveValue = function(dom,objectType,objectId,key,transformation){
 var makeReactiveStyle = function(dom,style,objectType,objectId,key,transformation){
   Tracker.autorun(function(){
     var x = MTL[objectType][objectId][key];
+
     dom.style[style] = transformation(x);
   });
 }
@@ -29,13 +30,13 @@ var makeReactiveChecked = function(dom,objectType,objectId,key){
 //variable panel
 
 var valToKnobPosition = function(val,slider,variableId){
-  if(val <= MTL.variables[variableId].min){
+  var knobPosition = ((val-MTL.variables[variableId].left)/(MTL.variables[variableId].right - MTL.variables[variableId].left)) * slider.range;
+  if(knobPosition <= slider.lowerBound){
       return slider.lowerBound;
     }
-  if(val >= MTL.variables[variableId].max){
+  if(knobPosition >= slider.upperBound){
       return slider.upperBound;
   }
-  var knobPosition = (val-MTL.variables[variableId].min)/MTL.variables[variableId].range) * slider.range;
   return knobPosition;
 }
 var normalizeVal = function(val,variableId){
@@ -55,23 +56,24 @@ var slider = function(dom,variableId){
   var self = this;
   var mouseStartingPosition,
       knobPosition,
-      variableStartingValue;
+      variableStartingValue,
+      VAR = MTL.variables[variableId];
   window.mdiBindInput(dom,{onInput: function(id,data,state){
     if(state==="start"){
       mouseStartingPosition = data.x;
-      variableStartingValue = normalizeVal(MTL.variables[variableId].val,variableId);
+      variableStartingValue = normalizeVal(VAR.val,variableId);
       knobPosition = valToKnobPosition(variableStartingValue,self,variableId);
     }else{
       //console.log(data.x,mouseStartingPosition,knobPosition);
       var moved = data.x - mouseStartingPosition;
       var futurePosition = moved + knobPosition;
       if(futurePosition <= self.lowerBound){
-        MTL.variables[variableId].val = MTL.variables[variableId].min;
+        VAR.val = VAR.left;
       }else if(futurePosition >= self.upperBound){
-        MTL.variables[variableId].val = MTL.variables[variableId].max;
+        VAR.val = VAR.right;
       }else{
-        var valueIncreased = (moved/self.range) * MTL.variables[variableId].range;
-        MTL.variables[variableId].val = variableStartingValue + valueIncreased;
+        var valueIncreased = (moved/self.range) * (VAR.right - VAR.left);
+        VAR.val = variableStartingValue + valueIncreased;
       }
     }
   }});

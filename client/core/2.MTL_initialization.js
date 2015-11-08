@@ -4,11 +4,11 @@ var __MTL__ = window.__MTL__;
 
 window.MTL = (function(
   ObjsPrototypes,
-  MTLState,
+  MTLState
 ){
 var virtualMTL = {};
 var RealMTL = {
-  ObjsPrototypes : MTLObjsPrototypes,
+  ObjsPrototypes : ObjsPrototypes,
   state : MTLState,
   accessors : {},
   mutators : {},
@@ -32,8 +32,9 @@ _.each(RealMTL.state, function(value, key){
       RealMTL.state[key] = value;
       RealMTL.trackers[key].changed();
     }
-    _.objGetter(virtualMTL,key,RealMTL.accessors[key]);
-    _.objSetter(virtualMTL,key,RealMTL.mutators[key]);
+    _.objGetterSetter(virtualMTL,key,
+      RealMTL.accessors[key],
+      RealMTL.mutators[key]);
   }else{
     var t = key; //t denotes objType
     RealMTL.oIdCounters[t] = 0;
@@ -47,12 +48,14 @@ _.each(RealMTL.state, function(value, key){
     RealMTL.oMutators[t] = [];
     virtualMTL[t] = [];
     RealMTL.oConstructors[t] = function(){
+      console.log("variable created");
       RealMTL.trackers[t].changed();
       var newObj = _.new(RealMTL.ObjsPrototypes[t].obj, arguments);
       var objId = RealMTL.oIdCounters[t]++;
       newObj.id = objId;
       RealMTL.state[t].push(newObj);
       virtualMTL[t].push({});
+      RealMTL.oMutators[t][objId] = {};
       RealMTL.oTrackers[t][objId] = {
         self: _.newTracker() //a tracker for the entire object
       };
@@ -63,7 +66,6 @@ _.each(RealMTL.state, function(value, key){
         }
       };
       _.objGetter(virtualMTL[t][objId], "self", RealMTL.oAccessors[t][objId].self);
-      RealMTL.oMutators[t][objId] = {};
       _.each(_.omit(newObj, ['id']),
       //individual trackers for every mutable key (except for id)
         function(whatever,key){
@@ -77,13 +79,13 @@ _.each(RealMTL.state, function(value, key){
             RealMTL.oTrackers[t][objId][key].changed();
             RealMTL.oTrackers[t][objId].self.changed();
           }
-          _.objGetter(virtualMTL[t][objId],key,RealMTL.oAccessors[t][objId][key]);
-          _.objSetter(virtualMTL[t][objId],RealMTL.oMutators[t][objId][key]);
-          _.objIsConfigurable(virtualMTL[t][objId]);
-          if(t==="variables") __MTL__.variableCustomization();
+          _.objIsConfigurable(virtualMTL[t][objId],key);
+          _.objGetterSetter(virtualMTL[t][objId],key,
+            RealMTL.oAccessors[t][objId][key],
+            RealMTL.oMutators[t][objId][key]);
       });
-    };
-
+      if(t==="variables") __MTL__.variableCustomization(virtualMTL[t][objId]);
+    }
     RealMTL.oDestroyers[t] = function(id){
       RealMTL.trackers[t].changed();
       // Objects tracker would be notified when one of the objects is created or killed, which is to say, RealMTL.trackers[t] would be called (reactively).
@@ -118,20 +120,20 @@ return virtualMTL;
       variables: {
         singular: "Variable",
         obj: function(){
-          this.name = __MTL__.firstAvailableName();
+          this.name = __MTL__.firstAvailableVARName();
           this.id = null;
           this.val = null;
-          this.right = __MTL__.defaultValues.variable.right;
-          this.left = __MTL__.defaultValues.variable.left;
-          this.speed = __MTL__.defaultValues.variable.speed;
-          this.isInteger = __MTL__.defaultValues.variable.isInteger;
-          this.isAnimating = __MTL__.defaultValues.variable.isAnimating;
+          this.right = 1;
+          this.left = 0;
+          this.speed = 1000; //in ms taken to go from 1 end to the other
+          this.isInteger = false;
+          this.isAnimating = false;
         }
       },
       functions: {
         singular: "Function",
         obj: function(){
-          this.name = __MTL__.firstAvailableName();
+          this.name = __MTL__.firstAvailableFNName();
           this.id = null;
           this.expression = null;
           this.moveX = 0;
@@ -176,4 +178,4 @@ return virtualMTL;
       rotationZ: 0,
     }
   })()
-})
+);
